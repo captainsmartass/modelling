@@ -1,0 +1,31 @@
+# Wrote this in tandem with my buddy Bain Bronner for a project at William and Mary. 
+
+from scipy import integrate
+import pylab
+import numpy as np
+# x(t) = suscetible population
+# y(t) = infected population
+
+def f(N, t , A, b , v , alpha , beta , gamma ) :
+  return ( A * N[0] - ( beta * N[0] * N[1] ) - ( gamma * N[0] ), # X(t)
+    (beta * N[ 0 ] * N[ 1 ] ) - ( b + alpha + v ) * N[1], # Y( t )
+    v * N[1] + gamma * N[0] ) # Z( t )
+    
+N = [ 10 , 1 , 0 ] #initial values
+A = 0.035 # birth rate
+b = 0.015 # natural death rate
+v = 0.997 # recovery rate
+alpha = 0.003 # infection death rate
+beta = 0.5 # transmission rate
+gamma = 0.5 # immunization rate
+t = np.linspace( 0 , 10 , 2000) # time sweep
+
+# Numerically solving
+r = integrate.odeint( f , N, t , args=( A , b , v , alpha , beta , gamma) )
+
+# plotting functions
+pylab.plot( t , r [:, 0] , t , r [:, 1] , t , r [:, 2] , linewidth =1.5)
+pylab.legend( [ ' Susceptible Population ' , ' Infected Population ', ' Immune Population ' ] , loc='upper right ' )
+pylab.ylabel( ' Population ' , fontsize =20)
+pylab.xlabel( 'Time ' , fontsize =20)
+pylab.show ( )
